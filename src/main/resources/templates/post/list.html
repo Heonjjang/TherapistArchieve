@@ -1,0 +1,96 @@
+<!doctype html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+
+<head th:replace="fragments/common :: head('게시판')">
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+
+    <title>게시판</title>
+
+    <style>
+        .bd-placeholder-img {
+            font-size: 1.125rem;
+            text-anchor: middle;
+            -webkit-user-select: none;
+            -moz-user-select: none;
+            user-select: none;
+        }
+
+        @media (min-width: 768px) {
+            .bd-placeholder-img-lg {
+                font-size: 3.5rem;
+            }
+        }
+    </style>
+
+
+    <!-- Custom styles for this template -->
+    <link th:href="@{/css/navbar-top-fixed.css}" href="../static/css/navbar-top-fixed.css" rel="stylesheet">
+</head>
+
+<body>
+
+    <nav class="navbar navbar-expand-md navbar-dark fixed-top bg-dark" th:replace="fragments/common :: menu('post')">
+    </nav>
+
+    <main class="container">
+        <div class="bg-light p-5 rounded">
+            <h1>게시판</h1>
+        </div>
+        <!--
+        Thymeleaf 문법에서는 데이터 필드를 꺼내는 메서드를 호출할때 get을 지우고 호출하면 알아서 데이터를 꺼내온다.
+        posts.getTotalElements() -> posts.totalElements
+    -->
+        <div>총 건수 : <span th:text="${posts.totalElements}"></span></div>
+        <table class="table table-hover">
+            <thead>
+                <tr>
+                    <th scope="col">번호</th>
+                    <th scope="col">카테고리</th>
+                    <th scope="col">제목</th>
+                    <th scope="col">작성자</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr th:each="post : ${posts}">
+                    <td th:text="${post.postId}">0</td>
+                    <td th:text="${post.postType}">없음</td>
+                    <td><a th:text="${post.postTitle}" href="" th:href="@{/post/form(postId=${post.postId})}">Not
+                            Applicable</a></td>
+                    <td>홍길동</td>
+                </tr>
+            </tbody>
+        </table>
+        <nav aria-label="Page navigation example">
+            <ul class="pagination justify-content-center">
+                <li class="page-item" th:classappend="${1 == posts.pageable.pageNumber + 1} ? 'disabled'">
+                    <a class="page-link" href="#" th:href="@{/post/list(page=${posts.pageable.pageNumber - 1}, searchText=${param.searchText})}"
+                        tabindex="-1" aria-disabled="true">Previous</a>
+                </li>
+                <li class="page-item" th:classappend="${i == posts.pageable.pageNumber + 1} ? 'disabled'"
+                    th:each="i : ${#numbers.sequence(startPage, endPage)}"><a class="page-link" href="#"
+                        th:href="@{/post/list(page=${i - 1}, searchText=${param.searchText})}" th:text="${i}">1</a>
+                </li>
+                <li class="page-item"
+                    th:classappend="${posts.totalPages == posts.pageable.pageNumber + 1} ? 'disabled'">
+                    <a class="page-link" href="#"
+                        th:href="@{/post/list(page=${posts.pageable.pageNumber + 1}, searchText=${param.searchText})}">Next</a>
+                </li>
+            </ul>
+        </nav>
+        <div class="text-end">
+            <a type="button" class="btn btn-primary" th:href="@{/post/form}">쓰기</a>
+        </div>
+    </main>
+    <!-- Option 1: Bootstrap Bundle with Popper -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
+        crossorigin="anonymous"></script>
+</body>
+
+</html>
